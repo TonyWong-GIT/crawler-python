@@ -20,7 +20,7 @@ re_data = re.compile(r'<h3 class="r"><a href="[\s\S]*?" target="_blank">([\s\S]*
 
 
 
-def search(table_task, table_type, keyword,engines = ['google_hk','baidu','sousou'],page = 10):
+def search(table_task, table_type, keyword,engines = ['google_hk','baidu','sousou'],page = 6):
 	print engines
 	while len(engines)!=0:
 		set_params(table_task, table_type, keyword,engines[0])
@@ -52,8 +52,8 @@ def do_search(table_task, table_type, keyword,host,page):
 #	table_task = table_task.decode("utf-8").encode("utf-8")
 #	table_type = table_type.decode("utf-8").encode("utf-8")
 #	keyword = keyword.decode("utf-8").encode("utf-8")
-#	cur_timerecord.execute("insert into `timerecord`(`keyword`,`time`,`comefrom`,`type`,`task`) values('%s','%s','%s','%s','%s')"%(str(keyword), str(table_time), str(host), str(table_type), str(table_task)))
-	print "insert into `timerecord`(`keyword`,`time`,`comefrom`,`type`,`task`) values('%s','%s','%s','%s','%s')"%(str(keyword), str(table_time), str(host), str(table_type), str(table_task))
+	cur_timerecord.execute("insert into `timerecord`(`keyword`,`time`,`comefrom`,`type`,`task`) values('%s','%s','%s','%s','%s')"%(str(keyword), str(table_time), str(host), str(table_type), str(table_task)))
+#	print "insert into `timerecord`(`keyword`,`time`,`comefrom`,`type`,`task`) values('%s','%s','%s','%s','%s')"%(str(keyword), str(table_time), str(host), str(table_type), str(table_task))
 	pagenumber = 0
 	table_number = 0
 	while True:
@@ -83,8 +83,8 @@ def do_search(table_task, table_type, keyword,host,page):
 				table_number += 1
 				print   title_words,'\n',cite_words,'\n\n\n'
 				#fw.write(title_words+'\n'+cite_words+'\n'+text_words+'\n\n\n')
-#				cur_webpage.execute('insert into `webpage`("title","url","keyword","time","comefrom","number","type","task") values("%s","%s","%s","%s","%s",%d,"%s","%s")'%(str(title_words), str(cite_words), str(keyword), str(table_time), str(host), table_number, str(table_type), str(table_task) ))
-				print 'insert into `webpage`("title","url","keyword","time","comefrom","number","type","task") values("%s","%s","%s","%s","%s",%d,"%s","%s")'%(str(title_words), str(cite_words), str(keyword), str(table_time), str(host), table_number, str(table_type), str(table_task) )
+				cur_webpage.execute('insert into `webpage`(`title`,`url`,`keyword`,`time`,`comefrom`,`number`,`type`,`task`) values("%s","%s","%s","%s","%s",%d,"%s","%s")'%(str(title_words), str(cite_words), str(keyword), str(table_time), str(host), table_number, str(table_type), str(table_task) ))
+#				print 'insert into `webpage`("title","url","keyword","time","comefrom","number","type","task") values("%s","%s","%s","%s","%s",%d,"%s","%s")'%(str(title_words), str(cite_words), str(keyword), str(table_time), str(host), table_number, str(table_type), str(table_task) )
 				del mine_data[0]
 			if pagenumber >= 100:
 				return
@@ -112,8 +112,8 @@ def do_search(table_task, table_type, keyword,host,page):
 			extra_data = re.sub('<style>[\s\S]*?</style>','',extra_data)
 			extra_data = re.sub('<script>[\s\S]*?</script>','',extra_data)
 			extra_data = re.sub('<[\s\S]*?>','',extra_data)
-#			cur_webpage.execute('insert into `webpage`("title","url","keyword","time","comefrom","number","type","task") values("%s","%s","%s","%s","%s",%d,"%s","%s")'%(str(title), str(mine_data[0][0]), str(keyword), str(table_time), str(host), table_number, str(table_type), str(table_task) ))
-			print 'insert into `webpage`("title","url","keyword","time","comefrom","number","type","task") values("%s","%s","%s","%s","%s",%d,"%s","%s")'%(str(title), str(mine_data[0][0]), str(keyword), str(table_time), str(host), table_number, str(table_type), str(table_task) )
+			cur_webpage.execute('insert into `webpage`(`title`,`url`,`keyword`,`time`,`comefrom`,`number`,`type`,`task`) values("%s","%s","%s","%s","%s",%d,"%s","%s")'%(str(title), str(mine_data[0][0]), str(keyword), str(table_time), str(host), table_number, str(table_type), str(table_task) ))
+#			print 'insert into `webpage`("title","url","keyword","time","comefrom","number","type","task") values("%s","%s","%s","%s","%s",%d,"%s","%s")'%(str(title), str(mine_data[0][0]), str(keyword), str(table_time), str(host), table_number, str(table_type), str(table_task) )
 			print mine_data[0][0],'\n',title,'\n\n\n'
 			#fw.write(mine_data[0][0]+ '\n'+head_url+'\n'+title+'\n'+extra_data+'\n\n\n')
 			del mine_data[0]
@@ -157,8 +157,11 @@ if __name__ == '__main__':
   
   cur_webpage = conn.cursor()
   cur_timerecord = conn.cursor()
-  
-  search('体育新闻','篮球','nba',['google_hk','baidu','sousou'],2)
+  r_task = raw_input("请输入任务名称：\n")
+  r_type = raw_input("请输入子任务名称：\n")
+  r_keyword = raw_input("请输入关键字名称：\n")
+  print "开始检索。。。\n" 
+  search(r_task, r_type, r_keyword,['google_hk','baidu','sousou'],6)
   
   conn.commit()
   cur_webpage.close()
